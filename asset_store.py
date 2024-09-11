@@ -1,6 +1,7 @@
 import os
 import maya.cmds as cmds
 from PySide2 import QtWidgets, QtGui, QtCore
+import json
 
 """
 asset_store.py
@@ -24,9 +25,30 @@ By Chay
 class FolderBrowserUI(QtWidgets.QDialog):
     def __init__(self, parent=None):
         super(FolderBrowserUI, self).__init__(parent)
-        self.asset_directory = "E:\\Files\\Dropbox\\Resources\\Assets\\asset_store"
-        self.current_directory = "E:\\Files\\Dropbox\\Current"
-        self.archive_directory = "E:\\Files\\Dropbox\\Resources\\Archives"
+
+        # Get the directory of the current script
+        script_directory = os.path.dirname(os.path.abspath(__file__))
+
+        # Construct the full path to the settings.json file
+        settings_file = os.path.join(script_directory, 'settings.json')
+
+        # Load settings from the JSON file
+        try:
+            with open(settings_file, 'r') as file:
+                settings = json.load(file)
+        except FileNotFoundError:
+            raise FileNotFoundError(f"{settings_file} not found. Please provide the settings file.")
+        except json.JSONDecodeError:
+            raise ValueError(f"Error decoding JSON from {settings_file}. Please check the file format.")
+
+        # Retrieve settings
+        try:
+            self.asset_directory = settings["asset_directory"]
+            self.current_directory = settings["current_directory"]
+            self.archive_directory = settings["archive_directory"]
+            window_icon_path = settings["window_icon"]
+        except KeyError as e:
+            raise KeyError(f"Missing key in {settings_file}: {e}. Please ensure all required settings are provided.")
 
         self.setWindowFlags(self.windowFlags() | QtCore.Qt.WindowMinimizeButtonHint)
         self.setWindowIcon(QtGui.QIcon('E:/Files/Dropbox/Resources/Assets/PycharmProjects/baal/icons/baalIcon.ico'))
