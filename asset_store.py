@@ -457,7 +457,7 @@ class FolderBrowserUI(QtWidgets.QDialog):
         with open(note_file_path, 'r') as note_file:
             notes_content = note_file.read()
             creation_time = os.path.getctime(note_file_path)
-            creation_date = QtCore.QDateTime.fromSecsSinceEpoch(creation_time).toString("dd MMM yyyy hh:mm:ss")
+            creation_date = QtCore.QDateTime.fromSecsSinceEpoch(int(creation_time)).toString("dd MMM yyyy hh:mm:ss")
             self.notes_editor.setText(f"Created on: {creation_date}\n\n{notes_content}")
 
     def on_folder_selected(self, item):
