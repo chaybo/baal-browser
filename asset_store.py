@@ -51,7 +51,7 @@ class FolderBrowserUI(QtWidgets.QDialog):
             raise KeyError(f"Missing key in {settings_file}: {e}. Please ensure all required settings are provided.")
 
         self.setWindowFlags(self.windowFlags() | QtCore.Qt.WindowMinimizeButtonHint)
-        self.setWindowIcon(QtGui.QIcon('E:/Files/Dropbox/Resources/Assets/PycharmProjects/baal/icons/baalIcon.ico'))
+        self.setWindowIcon(QtGui.QIcon(window_icon_path))
         self.setWindowTitle("Baal Browser")
         self.setMinimumWidth(800)
         self.setMinimumHeight(400)
@@ -418,10 +418,6 @@ class FolderBrowserUI(QtWidgets.QDialog):
             item = QtWidgets.QListWidgetItem(file)
             file_path = os.path.join(selected_folder, file)
             item.setData(QtCore.Qt.UserRole, file_path)
-            if file.endswith('.ma') or file.endswith('.mb'):
-                item.setIcon(QtGui.QIcon('E:/Files/Dropbox/Resources/Assets/Icons/maya_icon.png'))
-            elif file.endswith('.obj'):
-                item.setIcon(QtGui.QIcon('E:/Files/Dropbox/Resources/Assets/Icons/obj_icon.png'))
             self.file_list.addItem(item)
 
     def populate_versions(self, base_name):
