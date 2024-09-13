@@ -2,6 +2,7 @@ import os
 import maya.cmds as cmds
 from PySide2 import QtWidgets, QtGui, QtCore
 import json
+from datetime import datetime
 
 """
 asset_store.py
@@ -220,10 +221,6 @@ class FolderBrowserUI(QtWidgets.QDialog):
                     item = QtWidgets.QListWidgetItem(file)
                     file_path = os.path.join(folder_path, file)
                     item.setData(QtCore.Qt.UserRole, file_path)
-                    if file.endswith('.ma') or file.endswith('.mb'):
-                        item.setIcon(QtGui.QIcon('E:/Files/Dropbox/Resources/Assets/Icons/maya_icon.png'))
-                    elif file.endswith('.obj'):
-                        item.setIcon(QtGui.QIcon('E:/Files/Dropbox/Resources/Assets/Icons/obj_icon.png'))
                     file_list.addItem(item)
 
     def on_file_context_menu(self, position):
@@ -433,7 +430,6 @@ class FolderBrowserUI(QtWidgets.QDialog):
             item = QtWidgets.QListWidgetItem(version)
             file_path = os.path.join(selected_folder, version)
             item.setData(QtCore.Qt.UserRole, file_path)
-            item.setIcon(QtGui.QIcon('E:/Files/Dropbox/Resources/Assets/Icons/version_icon.png'))
             self.versions_list.addItem(item)
 
     def populate_notes(self, base_name):
@@ -453,7 +449,7 @@ class FolderBrowserUI(QtWidgets.QDialog):
         with open(note_file_path, 'r') as note_file:
             notes_content = note_file.read()
             creation_time = os.path.getctime(note_file_path)
-            creation_date = QtCore.QDateTime.fromSecsSinceEpoch(int(creation_time)).toString("dd MMM yyyy hh:mm:ss")
+            creation_date = datetime.fromtimestamp(creation_time).strftime("%d-%m-%Y %H:%M:%S")
             self.notes_editor.setText(f"Created on: {creation_date}\n\n{notes_content}")
 
     def on_folder_selected(self, item):
@@ -583,7 +579,7 @@ class FolderBrowserUI(QtWidgets.QDialog):
 
 
 def stone_importer(project_name, folder_name, maya_file, force_frame_rate, new_scene=True):
-    base_dir = "E:\\Files\\Dropbox\\Resources\\Assets\\asset_store"
+    base_dir = self.asset_directory
     full_path = os.path.join(base_dir, project_name, folder_name, maya_file)
     if not os.path.exists(full_path):
         print(f"File not found: {full_path}")
